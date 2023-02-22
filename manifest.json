@@ -1,0 +1,27 @@
+{
+  "short_name": "Reachability",
+  "name": "Reachability Analysis",
+  "icons": [
+    {
+      "src": "images/isobars (64x64).png",
+      "type": "image/png",
+      "sizes": "64x64"
+    },
+    {
+      "src": "images/isobars (128x128).png",
+      "type": "image/png",
+      "sizes": "128x128"
+    },
+    {
+      "src": "images/isobars (256x256).png",
+      "type": "image/png",
+      "sizes": "256x256"
+    }
+  ],
+  "start_url": "reachability.html",
+  "background_color": "#FFDAB9",
+  "display": "standalone",
+  "scope": ".",
+  "theme_color": "#3367D6",
+  "description": "This is a Web-based application especially developed for the users to find reachability from the location points of emergency services in the area of interest. "
+}

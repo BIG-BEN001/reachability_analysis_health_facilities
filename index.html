@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reachability Analysis</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
+    <link rel="stylesheet" type="text/css" href="dist/MarkerCluster.css">
+	<link rel="stylesheet" type="text/css" href="dist/MarkerCluster.Default.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/trafforddatalab/leaflet.reachability@v2.0.1/leaflet.reachability.css"/> -->
+    <link rel="stylesheet" href="css/leaflet.reachability.css"/>
+    <link rel="stylesheet" href="css/reachability.css"/>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.css" rel="stylesheet" />
+   
+
+       <!-- <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-analytics.js"></script> -->
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.4.2/firebase-auth.js"></script>
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+ 
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.1/mapbox-gl.js"></script>
+    
+     <link rel="manifest" href="manifest.json">
+</head>
+<body>
+        <!-- Title Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#"><i class="fa fa-street-view"></i> Reachability Web App</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+              
+                <li class="nav-item" id="logoutBtn" style="display: none;">
+                    <a class="nav-link" onclick="logoutUser()">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+<div class="container-fluid">
+    <div id="logged_in">
+        <h3>Reachability Analysis</h3>
+        <div id="control-frame" class="col-lg-6 col-md-6 col-sm-12 m-0 p-0">
+            <header>
+                <h3 class="text-center">Kenya Reachability Analysis</h3><hr>
+                <div id="selected">
+                    <div class="alert alert-success">
+                        Select A County to display statistics
+                    </div>
+                </div>
+            </header>
+        </div>
+        <div id="map"></div>
+    </div>
+</div>
+    <!-- <div id="not_logged_in">
+        <div class="jumbotron jumbotron">
+            <div class="container">
+                <h1 class="display-4">Reachability Web App</h1>
+                <p class="lead">
+                    This is a Web-based application especially developed for the users to find reachability from the location points of emergency services in the area of interest.
+                    Onlineservice used in it to get real-time results on the map for spatial decision support.
+                    The application will be very useful for the city planners, civil engineers or any government projects related to location services.
+                </p>
+            </div>
+        </div>
+        
+          
+        <div class="row">
+            <div class="col-lg-6 col-sm-12 col-md-12" >
+                <div class="form-card">
+                    <p>This is a Sign In form</p>
+                    <div id="sign_in_alerts"></div>
+                    <form id="sign_in_form">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>                  
+                            <input type="email" class="form-control" id="sign_in_email" aria-describedby="emailHelp" placeholder="Enter email">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="sign_in_pwd" placeholder="Password">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-lg-6 col-sm-12 col-md-12">
+                <div class="form-card">
+                    <p>This is a Sign up form</p>
+                    <div id="sign_up_alerts"></div>
+                    <form id="sign_up_form">
+                        <div class="form-group">
+                            <label for="exampleInputEmail1">Email address</label>
+                            <input type="email" class="form-control" id="sign_up_email" aria-describedby="emailHelp" placeholder="Enter email">
+                            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>                
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Password</label>
+                            <input type="password" class="form-control" id="sign_up_pwd1" placeholder="Password">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleInputPassword1">Confirm Password</label>
+                            <input type="password" class="form-control" id="sign_up_pwd2" placeholder="confirm Password">
+                        </div>
+                        <button type="submit" class="btn btn-success">Sign up</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div> -->
+
+
+   
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js" integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA==" crossorigin=""></script>
+    <script type="text/javascript" src="dist/leaflet.markercluster-src.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script> -->
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script> -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/gh/trafforddatalab/leaflet.reachability@v2.0.1/leaflet.reachability.js"></script> -->
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyCkzWB1Z1By_zCqPFxuq0vT3M5fgXPtttI",
+            authDomain: "reachabilityanalysis.firebaseapp.com",
+            projectId: "reachabilityanalysis",
+            storageBucket: "reachabilityanalysis.appspot.com",
+            messagingSenderId: "792444769074",
+            appId: "1:792444769074:web:cb6d35fd6dd9960c217d2b"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+   
+    <script src="js/leaflet.reachability.js"></script>
+    <script src="data/Pop_Data.geojson"></script>
+    <script src="data/ke_health_facilities.geojson"></script>
+    <script src="js/reachability.js"></script>
+    <!-- <script src="js/auth.js"></script> -->
+    <script src="app.js"></script>
+    <script src="sw.js"></script>
+    <!-- <script src="js/map.js"></script> -->
+</body>
+</html>

@@ -1,0 +1,35 @@
+
+
+h3{
+    color: #ff8400;
+    padding-left: 30px;
+}
+
+#map{
+   width: 800px;
+   height: 600px;
+   /* display: none; */
+   padding-left: 30px;
+}
+
+#control-frame {
+	/* background-color: #9687b4; */
+    overflow: scroll;
+	float: right;
+	position: right;
+	width: 500px;
+    height: 500px;
+    /* display: none; */
+}
+
+#control-frame header {
+    background-color: #f3f3f3;
+    color: #000;
+    padding: 5%;
+}
+
+#selected {
+    background-color: white;
+    padding: 4%;
+    border-radius: 4px;
+}
